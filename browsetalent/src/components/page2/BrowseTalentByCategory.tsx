@@ -159,7 +159,7 @@ const BrowseTalentByCategory: React.FC<BrowseTalentByCategoryProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
         {filteredFreelancers.length > 0 ? (
           filteredFreelancers.map((freelancer) => (
             <ProfileCard key={freelancer.id} freelancer={freelancer} />
