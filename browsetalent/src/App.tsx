@@ -7,9 +7,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {/* Route for the HeroSection */}
         <Route path="/" element={<Home />} />
-        {/* Route for the Home2 component */}
         <Route path="/home2" element={<Home2 />} />
       </Routes>
     </Router>
