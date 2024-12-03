@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from "react";
 import ProfileCard from "./ProfileCards";
 import { useGetAllFreelancers } from "../../libs/hooks/freelancer";
-import SortIcon from "@mui/icons-material/Sort"; // Importing MUI icon
-
-interface Freelancer {
-  id: string | number;
-  name: string;
-  profilePicture: string;
-  rating: number;
-  reviews: number;
-  skills: string[];
-  location: string;
-  language: string;
-  hourlyRate: string;
-  jobSuccess: number;
-  trending: boolean;
-  category: string;
-  service: string;
-}
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setLocationFilter,
+  setLanguageFilter,
+  setSkillsFilter,
+  setPriceFilter,
+} from "../../redux/slices/filterSlice";
+import SortIcon from "@mui/icons-material/Sort";
+import { Freelancer } from "../../redux/slices/freelauncerSlice";
+import { RootState } from "../../redux/store";
 
 interface BrowseTalentByCategoryProps {
   query: string;
@@ -25,46 +18,72 @@ interface BrowseTalentByCategoryProps {
 }
 
 const BrowseTalentByCategory: React.FC<BrowseTalentByCategoryProps> = ({
-  query,
+  query = "",
   category,
 }) => {
   const [filteredFreelancers, setFilteredFreelancers] = useState<Freelancer[]>(
     []
   );
-  const [locationFilter, setLocationFilter] = useState<string>("All");
-  const [languageFilter, setLanguageFilter] = useState<string>("All");
-  const [skillsFilter, setSkillsFilter] = useState<string>("All");
-  const [priceFilter, setPriceFilter] = useState<number>(0); // Filter by price range
 
   const { data: freelancers = [], isLoading, error } = useGetAllFreelancers();
 
+  const locationFilter = useSelector(
+    (state: RootState) => state.filters.location
+  );
+  const languageFilter = useSelector(
+    (state: RootState) => state.filters.language
+  );
+  const skillsFilter = useSelector((state: RootState) => state.filters.skills);
+  const priceFilter = useSelector((state: RootState) => state.filters.price);
+
+  const dispatch = useDispatch();
+
+  const [locations, setLocations] = useState<string[]>([]);
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
+
   useEffect(() => {
     if (freelancers.length > 0) {
+      const uniqueLocations = Array.from(
+        new Set(freelancers.map((freelancer) => freelancer.location))
+      );
+      const uniqueLanguages = Array.from(
+        new Set(freelancers.map((freelancer) => freelancer.language))
+      );
+      const allSkills = Array.from(
+        new Set(
+          freelancers.flatMap((freelancer) =>
+            freelancer.skills.flatMap((skill) =>
+              skill.split(/[\s,]+/).map((s) => s.trim())
+            )
+          )
+        )
+      );
+
+      setLocations(uniqueLocations);
+      setLanguages(uniqueLanguages);
+      setSkills(allSkills);
+
+      // Filter freelancers based on search and filters
       const lowerCaseQuery = query.trim().toLowerCase();
       const filtered = freelancers.filter((freelancer) => {
         const matchesQuery =
           freelancer.name.toLowerCase().includes(lowerCaseQuery) ||
           freelancer.skills.some((skill) =>
             skill.toLowerCase().includes(lowerCaseQuery)
-          ) ||
-          freelancer.location.toLowerCase().includes(lowerCaseQuery);
-
+          );
         const matchesCategory = category
           ? freelancer.category === category
           : true;
-
         const matchesLocation =
           locationFilter === "All" || freelancer.location === locationFilter;
-
         const matchesLanguage =
           languageFilter === "All" || freelancer.language === languageFilter;
-
         const matchesSkills =
           skillsFilter === "All" ||
           freelancer.skills.some((skill) =>
             skill.toLowerCase().includes(skillsFilter.toLowerCase())
           );
-
         const matchesPrice =
           priceFilter === 0 || parseFloat(freelancer.hourlyRate) <= priceFilter;
 
@@ -83,9 +102,9 @@ const BrowseTalentByCategory: React.FC<BrowseTalentByCategoryProps> = ({
       setFilteredFreelancers([]);
     }
   }, [
+    freelancers,
     query,
     category,
-    freelancers,
     locationFilter,
     languageFilter,
     skillsFilter,
@@ -97,47 +116,52 @@ const BrowseTalentByCategory: React.FC<BrowseTalentByCategoryProps> = ({
 
   return (
     <section className="py-12 px-4">
-      <div className="flex lg:flex-row flex-col md:flex-col justify-between items-start md:items-start mb-6 gap-4">
+      <div className="flex lg:flex-row flex-col md:flex-col justify-between items-start mb-6 gap-4">
         <div className="flex flex-wrap gap-4">
           <select
             value={locationFilter}
-            onChange={(e) => setLocationFilter(e.target.value)}
+            onChange={(e) => dispatch(setLocationFilter(e.target.value))}
             className="p-2 border rounded w-full md:w-auto"
           >
             <option value="All">All Locations</option>
-            <option value="USA">USA</option>
-            <option value="London">London</option>
-            <option value="Punjab">Punjab</option>
-            <option value="Tronto">Tronto</option>
-            <option value="Pakistan">Pakistan</option>
+            {locations.map((location) => (
+              <option key={location} value={location}>
+                {location}
+              </option>
+            ))}
           </select>
 
           <select
             value={languageFilter}
-            onChange={(e) => setLanguageFilter(e.target.value)}
+            onChange={(e) => dispatch(setLanguageFilter(e.target.value))}
             className="p-2 border rounded w-full md:w-auto"
           >
             <option value="All">All Languages</option>
-            <option value="English">English</option>
+            {languages.map((language) => (
+              <option key={language} value={language}>
+                {language}
+              </option>
+            ))}
           </select>
 
           <select
             value={skillsFilter}
-            onChange={(e) => setSkillsFilter(e.target.value)}
+            onChange={(e) => dispatch(setSkillsFilter(e.target.value))}
             className="p-2 border rounded w-full md:w-auto"
           >
             <option value="All">All Skills</option>
-            <option value="html">HTML</option>
-            <option value="css">CSS</option>
-            <option value="js">JavaScript</option>
-            <option value="php">PHP</option>
-            <option value="angular">Angular</option>
-            <option value="react">React</option>
+            {skills.map((skill) => (
+              <option key={skill} value={skill}>
+                {skill}
+              </option>
+            ))}
           </select>
 
           <select
             value={priceFilter}
-            onChange={(e) => setPriceFilter(parseFloat(e.target.value))}
+            onChange={(e) =>
+              dispatch(setPriceFilter(parseFloat(e.target.value)))
+            }
             className="p-2 border rounded w-full md:w-auto"
           >
             <option value={0}>All Price Ranges</option>
@@ -161,8 +185,8 @@ const BrowseTalentByCategory: React.FC<BrowseTalentByCategoryProps> = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
         {filteredFreelancers.length > 0 ? (
-          filteredFreelancers.map((freelancer) => (
-            <ProfileCard key={freelancer.id} freelancer={freelancer} />
+          filteredFreelancers.map((freelancer, index) => (
+            <ProfileCard key={freelancer.id || index} freelancer={freelancer} />
           ))
         ) : (
           <div className="text-center col-span-full">

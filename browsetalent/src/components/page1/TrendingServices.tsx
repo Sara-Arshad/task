@@ -6,6 +6,12 @@ import "slick-carousel/slick/slick-theme.css";
 import "../../App.css";
 import { Link } from "react-router-dom";
 
+interface ArrowProps {
+  className: string;
+  style: React.CSSProperties;
+  onClick: () => void;
+}
+
 const TrendingServices: React.FC = () => {
   const { data: freelancers = [], isLoading, error } = useGetAllFreelancers();
 
@@ -13,7 +19,8 @@ const TrendingServices: React.FC = () => {
     (freelancer) => freelancer.trending
   );
 
-  function NextArrow(props) {
+  // Arrow Components
+  function NextArrow(props: ArrowProps) {
     const { className, style, onClick } = props;
     return (
       <div
@@ -31,16 +38,23 @@ const TrendingServices: React.FC = () => {
     );
   }
 
-  function PrevArrow(props) {
+  // PrevArrow component
+  function PrevArrow(props: ArrowProps) {
     const { className, style, onClick } = props;
     return (
       <div
         className={className}
-        style={{ ...style, display: "block", left: "5px" }}
+        style={{
+          ...style,
+          display: "block",
+          left: "5px",
+        }}
         onClick={onClick}
       />
     );
   }
+
+  // Slider settings
   const settings = {
     dots: false,
     infinite: true,
@@ -48,8 +62,12 @@ const TrendingServices: React.FC = () => {
     slidesToShow: 3,
     slidesToScroll: 3,
     initialSlide: 0,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    nextArrow: (
+      <NextArrow className="slick-next" style={{}} onClick={() => {}} />
+    ),
+    prevArrow: (
+      <PrevArrow className="slick-prev" style={{}} onClick={() => {}} />
+    ),
     responsive: [
       {
         breakpoint: 1024,
@@ -85,6 +103,7 @@ const TrendingServices: React.FC = () => {
       },
     ],
   };
+
   if (isLoading) return <p>Loading trending services...</p>;
   if (error) return <p>Error loading trending services: {error.message}</p>;
 
@@ -108,9 +127,9 @@ const TrendingServices: React.FC = () => {
 
       <div className="slider-container">
         <Slider {...settings}>
-          {trendingFreelancers.map((freelancer) => (
+          {trendingFreelancers.map((freelancer, index) => (
             <div
-              key={freelancer.id}
+              key={freelancer.id || index}
               className="bg-white shadow-md rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 mx-3 mb-4 w-full sm:w-72 md:w-56"
             >
               {/* Image Section */}
@@ -119,6 +138,7 @@ const TrendingServices: React.FC = () => {
                   src={freelancer.profilePicture || "default-image.jpg"}
                   alt={freelancer.name}
                   className="w-full h-36 sm:h-48 object-cover"
+                  loading="lazy"
                 />
               </div>
 

@@ -17,25 +17,22 @@ const BrwoseServiceByCategory: React.FC = () => {
   if (error) return <p>Error loading services: {error.message}</p>;
 
   const groupedByCategory = freelancers.reduce(
-    (acc: Record<string, any[]>, freelancer) => {
+    (acc: Record<string, string[]>, freelancer) => {
       if (!acc[freelancer.category]) {
         acc[freelancer.category] = [];
       }
       acc[freelancer.category].push(freelancer.service);
       return acc;
     },
-    {}
+    {} as Record<string, string[]>
   );
 
   return (
     <section className="py-12 mt-32 px-4 ">
       <div className="space-y-4">
-        {/* Heading */}
         <h3 className="text-2xl md:text-3xl font-bold text-center md:text-left">
           Browse services by category
         </h3>
-
-        {/* Subtext and Link */}
         <div className="flex flex-col md:flex-row md:justify-between text-center md:text-left">
           <p className="text-gray-600 text-sm md:text-base">
             Get some Inspirations from 1800+ skills
@@ -55,7 +52,6 @@ const BrwoseServiceByCategory: React.FC = () => {
             className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300"
           >
             <div className="flex items-center mb-8">
-              {/* Icon Image */}
               <img
                 src={
                   categoryIcons[category as keyof typeof categoryIcons] ||
@@ -63,6 +59,7 @@ const BrwoseServiceByCategory: React.FC = () => {
                 }
                 alt="Category Icon"
                 className="w-10 h-10 mr-2"
+                loading="lazy"
               />
             </div>
             <p className="text-sm text-gray-600 mb-4">

@@ -1,13 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "../axiosInstance";
-
-interface Category {
-  id: string | number;
-  name: string;
-  image: string;
-  price: string;
-  service: string;
-}
+import { Category } from "../../redux/slices/categoriesSlice";
 
 const fetchAllCategories = async (): Promise<Category[]> => {
   const response = await axiosInstance.get("/categories/all");
