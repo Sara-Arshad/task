@@ -1,5 +1,4 @@
 import React from "react";
-// Assuming you're using Font Awesome for the Search icon
 
 interface SearchButtonProps {
   handleSearch: () => void;

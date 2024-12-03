@@ -69,7 +69,6 @@ const Navbar: React.FC = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
       <MobileMenu isMenuOpen={isMenuOpen} closeMenu={closeMenu} />
     </>
   );

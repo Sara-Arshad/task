@@ -1,19 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
-interface Freelancer {
-  id: string | number;
-  name: string;
-  profilePicture: string;
-  rating: number;
-  reviews: number;
-  skills: string[];
-  location: string;
-  hourlyRate: string;
-  jobSuccess: number;
-  trending: boolean;
-  category: string;
-}
+import { Freelancer } from "../../redux/slices/freelauncerSlice";
 
 const ProfileCard: React.FC<{ freelancer: Freelancer }> = ({ freelancer }) => {
   return (
@@ -27,7 +14,6 @@ const ProfileCard: React.FC<{ freelancer: Freelancer }> = ({ freelancer }) => {
       </div>
       <h3 className="text-xl font-semibold text-center">{freelancer.name}</h3>
 
-      {/* Rating and Reviews */}
       <div className="flex justify-center items-center space-x-1 mb-2">
         <span className="text-xs px-1 py-0.5 flex justify-center items-center">
           ⭐ {freelancer.rating}

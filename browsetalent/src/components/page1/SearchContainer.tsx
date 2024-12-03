@@ -14,7 +14,6 @@ const SearchContainer: React.FC = () => {
     []
   );
   const navigate = useNavigate();
-
   const {
     data: freelancers = [],
     isLoading: isFreelancersLoading,
@@ -25,14 +24,14 @@ const SearchContainer: React.FC = () => {
     data: categories = [],
     isLoading: isCategoriesLoading,
     error: categoriesError,
-  } = useGetAllCategories(); // This hook will provide the category data
+  } = useGetAllCategories();
 
   const handleSearch = () => {
     if (!query || !selectedCategory) {
       alert("Please enter a search query and select a category.");
       return;
     }
-    console.log("query", query, "selected category", selectedCategory);
+
     navigate("/home2", {
       state: {
         query,

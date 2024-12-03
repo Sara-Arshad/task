@@ -100,10 +100,10 @@ const FreelancerSearchInput: React.FC<FreelancerSearchInputProps> = ({
                 </p>
               ) : (
                 <List>
-                  {filteredFreelancers.map((freelancer) => (
+                  {filteredFreelancers.map((freelancer, index) => (
                     <ListItem
                       onClick={() => handleSelect(freelancer)}
-                      key={freelancer.id}
+                      key={freelancer.id || index}
                     >
                       <ListItemAvatar>
                         <Avatar

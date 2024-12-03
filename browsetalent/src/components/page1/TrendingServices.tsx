@@ -18,8 +18,6 @@ const TrendingServices: React.FC = () => {
   const trendingFreelancers = freelancers.filter(
     (freelancer) => freelancer.trending
   );
-
-  // Arrow Components
   function NextArrow(props: ArrowProps) {
     const { className, style, onClick } = props;
     return (
@@ -38,7 +36,6 @@ const TrendingServices: React.FC = () => {
     );
   }
 
-  // PrevArrow component
   function PrevArrow(props: ArrowProps) {
     const { className, style, onClick } = props;
     return (
@@ -54,7 +51,6 @@ const TrendingServices: React.FC = () => {
     );
   }
 
-  // Slider settings
   const settings = {
     dots: false,
     infinite: true,
@@ -132,7 +128,6 @@ const TrendingServices: React.FC = () => {
               key={freelancer.id || index}
               className="bg-white shadow-md rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 mx-3 mb-4 w-full sm:w-72 md:w-56"
             >
-              {/* Image Section */}
               <div className="relative">
                 <img
                   src={freelancer.profilePicture || "default-image.jpg"}
@@ -142,14 +137,12 @@ const TrendingServices: React.FC = () => {
                 />
               </div>
 
-              {/* Content Section */}
               <div className="p-4">
                 {/* Category */}
                 <p className="text-xs sm:text-sm text-gray-600">
                   {freelancer.category}
                 </p>
 
-                {/* Service Title */}
                 <h3 className="text-sm sm:text-lg font-semibold text-gray-800 mt-2">
                   <a
                     href={`/services/${freelancer.id}`}
@@ -159,7 +152,6 @@ const TrendingServices: React.FC = () => {
                   </a>
                 </h3>
 
-                {/* Rating Section */}
                 <div className="mt-2 flex items-center space-x-2">
                   <span className="text-yellow-500 text-sm sm:text-base">
                     ⭐ {freelancer.rating}
